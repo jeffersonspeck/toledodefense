@@ -88,35 +88,64 @@ def criar_raio():
 
 
 def criar_fundo():
-    """Cenario de Toledo-PR: ceu, campo e silhueta de cidade."""
+    """Cenario de Toledo-PR: ceu, lago, catedral, silos e plantacoes."""
     w, h = 800, 600
     s = pygame.Surface((w, h))
+    # ceu em degrade
     for y in range(h):
         t = y / h
-        cor = (int(120 + 100*t), int(180 + 50*t), int(230 - 30*t))
+        cor = (int(120 + 110*t), int(175 + 55*t), int(225 - 20*t))
         pygame.draw.line(s, cor, (0, y), (w, y))
     # sol
-    pygame.draw.circle(s, (255, 240, 180), (660, 110), 45)
-    # silhueta cidade (predios pequenos do interior)
-    base = 430
+    pygame.draw.circle(s, (255, 240, 180), (690, 90), 42)
+
+    base = 410  # linha do horizonte
+
+    # ---- CATEDRAL CRISTO REI (esquerda) ----
+    cx = 90
+    pygame.draw.rect(s, (225, 220, 210), (cx, base - 70, 70, 70))
+    pygame.draw.polygon(s, (170, 90, 70),
+                        [(cx - 6, base - 70), (cx + 76, base - 70), (cx + 35, base - 95)])
+    pygame.draw.rect(s, (235, 230, 220), (cx + 26, base - 130, 18, 60))
+    pygame.draw.polygon(s, (120, 140, 170),
+                        [(cx + 24, base - 130), (cx + 46, base - 130), (cx + 35, base - 165)])
+    pygame.draw.line(s, (60, 60, 60), (cx + 35, base - 165), (cx + 35, base - 180), 2)
+    pygame.draw.line(s, (60, 60, 60), (cx + 30, base - 175), (cx + 40, base - 175), 2)
+    pygame.draw.rect(s, (120, 80, 50), (cx + 30, base - 24, 12, 24))
+    pygame.draw.circle(s, (90, 140, 200), (cx + 36, base - 50), 7)
+
+    # ---- SILOS DO AGRO (centro-direita) ----
+    for i, sx in enumerate((470, 510, 548)):
+        sh = 70 + (i % 2) * 14
+        pygame.draw.rect(s, (200, 205, 210), (sx, base - sh, 30, sh))
+        pygame.draw.ellipse(s, (170, 175, 185), (sx, base - sh - 10, 30, 20))
+        for ry in range(base - sh + 8, base, 12):
+            pygame.draw.line(s, (160, 165, 175), (sx, ry), (sx + 30, ry), 1)
+
+    # ---- CASARIO simples do interior ----
     import random
-    random.seed(7)
-    x = 0
-    while x < w:
-        bw = random.randint(40, 80)
-        bh = random.randint(40, 120)
-        pygame.draw.rect(s, (90, 110, 130), (x, base - bh, bw, bh))
-        for wy in range(base - bh + 8, base, 16):
-            for wx in range(x + 6, x + bw - 6, 14):
-                pygame.draw.rect(s, (200, 220, 120), (wx, wy, 6, 8))
-        x += bw + 6
-    # campo verde (agro de Toledo)
-    pygame.draw.rect(s, (90, 160, 70), (0, base, w, h - base))
-    for fx in range(0, w, 40):
-        pygame.draw.line(s, (70, 140, 55), (fx, base), (fx + 20, h), 2)
-    # silo/torre
-    pygame.draw.rect(s, (200, 200, 200), (120, base - 60, 30, 60))
-    pygame.draw.polygon(s, (180, 90, 60), [(115, base-60), (155, base-60), (135, base-85)])
+    random.seed(11)
+    for bx in (200, 250, 300, 350, 600, 650, 700, 745):
+        bh = random.randint(35, 60)
+        pygame.draw.rect(s, (180, 150, 130), (bx, base - bh, 42, bh))
+        pygame.draw.polygon(s, (150, 70, 60),
+                            [(bx - 4, base - bh), (bx + 46, base - bh), (bx + 21, base - bh - 16)])
+        pygame.draw.rect(s, (110, 150, 200), (bx + 14, base - bh + 14, 12, 12))
+
+    # ---- LAGO (Parque dos Lagos) ----
+    lago_top = base
+    pygame.draw.rect(s, (70, 130, 180), (0, lago_top, w, 40))
+    for ly in range(lago_top + 6, lago_top + 40, 8):
+        pygame.draw.line(s, (110, 170, 215), (0, ly), (w, ly), 1)
+
+    # ---- CAMPO / PLANTACAO (agro) ----
+    campo_top = base + 40
+    pygame.draw.rect(s, (95, 165, 75), (0, campo_top, w, h - campo_top))
+    for fx in range(-40, w, 36):
+        pygame.draw.line(s, (75, 145, 60), (fx, campo_top), (fx + 60, h), 3)
+    for ry in range(campo_top + 20, h, 26):
+        pygame.draw.line(s, (70, 135, 55), (0, ry), (w, ry), 2)
+
     salvar(s, "fundo.png")
 
 
@@ -133,6 +162,9 @@ criar_programador()
 criar_chefe((150, 80, 200), "chefe1.png")
 criar_chefe((200, 120, 60), "chefe2.png")
 criar_chefe((80, 180, 120), "chefe3.png")
+criar_chefe((200, 70, 90), "chefe4.png")
+criar_chefe((70, 130, 200), "chefe5.png")
+criar_chefe((210, 180, 60), "chefe6.png")
 criar_raio()
 criar_fundo()
 criar_chao()
